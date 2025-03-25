@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,6 +13,45 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // variables
+  Map<String, dynamic>? data;
+  List<dynamic>? hourlyTimes, hourlyTemp, hourlyHumidity;
+  String? timezOne, greetings, formattedDate, formattedTime;
+
+  // function to fetch data from API
+  void fetchData() async {
+    // convert url string to uri
+    Uri url = Uri.parse(
+        "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m");
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      setState(() {
+        data = jsonDecode(response.body);
+        hourlyTimes = data!["hourly"]["time"].sublist(0, 24);
+        hourlyTemp = data!["hourly"]["temperature_2m"].sublist(0, 24);
+        hourlyHumidity = data!["hourly"]["relative_humidity_2m"].sublist(0, 24);
+        timezOne = data!["timezone"];
+
+        // determine greeting and format time
+        DateTime currentTime = DateTime.parse(data!["current"]["time"]);
+        int currentHour = currentTime.hour;
+        if (currentHour < 12) {
+          greetings = "Good Morining";
+        } else if (currentHour < 18) {
+          greetings = "Good Afternoon";
+        } else {
+          greetings = "Good Evening";
+        }
+
+        // formatted date and time
+        formattedDate = DateFormat("EEEE d").format(currentTime);
+        formattedTime = DateFormat("h:mm a").format(currentTime);
+      });
+    } else {
+      print("Error: ${response.statusCode}");
+    }
+  }
+
   // function to gradient hourly forecast text
   Widget gradientText(String text, double fontSize, FontWeight fontWeight) {
     return ShaderMask(
