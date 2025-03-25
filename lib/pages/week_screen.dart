@@ -34,7 +34,7 @@ class _WeekScreenState extends State<WeekScreen> {
         data = jsonDecode(response.body);
         dailyTemps = data!["daily"]["temperature_2m_max"];
         dailyDates = data!["daily"]["time"];
-        dailyWeatherCodes = data!["daily"]["weathercode"];
+        dailyWeatherCodes = data!["daily"]["weather_code"];
       });
     } else {
       print("Error has occured: ${response.statusCode}");
@@ -225,7 +225,7 @@ class _WeekScreenState extends State<WeekScreen> {
 
                                 // temp
                                 Text(
-                                  "${dailyTemps![index].toString().substring(0, 2)} C",
+                                  "${dailyTemps![index].toString()} °C",
                                   style: GoogleFonts.openSans(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 65,

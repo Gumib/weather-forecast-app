@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void fetchData() async {
     // convert url string to uri
     Uri url = Uri.parse(
-        "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m,relative_humidity_2m&current=temperature_2m&timezone=auto");
+        "https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m,relative_humidity_2m&current=temperature_2m,relative_humidity_2m&timezone=auto");
     final response = await http.get(url);
     if (response.statusCode == 200) {
       setState(() {
@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             // temperature
                             TextSpan(
                               text:
-                                  "${data!["current"]["temperature_2m"].toString().substring(0, 2)} C \n",
+                                  "${data!["current"]["temperature_2m"].toString()} °C \n",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 75,
@@ -309,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "${hourlyTemp![index].toString()} C",
+                                      "${hourlyTemp![index].toString()} °C",
                                       style: GoogleFonts.openSans(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 50,
